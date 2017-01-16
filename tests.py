@@ -142,8 +142,9 @@ class ParseDotenvDirectoryTestCase(unittest.TestCase):
             os.path.dirname(__file__), 'dotenv_dir')
         # Create the directory
         os.mkdir(self.dotenv_dir)
-        # Copy the test .env file to our new directory
-        shutil.copy2(os.path.abspath('.env'), self.dotenv_dir)
+        # Create a .env file in our new directory
+        with open(os.path.join(self.dotenv_dir, '.env')) as f:
+            f.write('DOTENV=from-dir')
 
     def tearDown(self):
         if os.path.exists(self.dotenv_dir):
@@ -151,4 +152,5 @@ class ParseDotenvDirectoryTestCase(unittest.TestCase):
 
     def test_can_read_dotenv_given_its_directory(self):
         read_dotenv(self.dotenv_dir)
-        self.assertEqual(os.environ.get('DOTENV'), 'true')
+        self.assertEqual(os.environ.get('DOTENV'), 'from-dir')
+        
